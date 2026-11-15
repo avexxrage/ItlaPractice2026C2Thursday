@@ -1,0 +1,72 @@
+@api = http://localhost:5180/api
+
+### 1. Usuario propietario
+POST {{api}}/users
+Content-Type: application/json
+
+{ "firstName": "Carlos", "lastName": "Gómez", "email": "carlos@correo.com", "phoneNumber": "809-555-0100", "identificationNumber": "001-1234567-1" }
+
+### 2. Activar al propietario
+POST {{api}}/users/1/activate
+
+### 3. Perfil de proveedor particular y verificación
+POST {{api}}/providers/individual
+Content-Type: application/json
+
+{ "userId": 1 }
+
+###
+POST {{api}}/providers/1/verify
+
+### 4. Vehículo y publicación
+POST {{api}}/vehicles
+Content-Type: application/json
+
+{ "providerId": 1, "brand": "Toyota", "model": "Corolla", "year": 2022, "licensePlate": "A123456", "color": "Blanco",
+  "transmission": "Automatic", "fuelType": "Gasoline", "category": "Sedan", "mileage": 30000,
+  "dailyRate": 3000, "estimatedCommercialValue": 1200000, "description": "Sedán en excelente estado" }
+
+###
+POST {{api}}/vehicles/1/publish
+
+### 5. Arrendatario verificado
+POST {{api}}/users
+Content-Type: application/json
+
+{ "firstName": "María", "lastName": "Santos", "email": "maria@correo.com", "phoneNumber": "829-555-0200", "identificationNumber": "402-7654321-2" }
+
+###
+POST {{api}}/users/2/activate
+
+###
+POST {{api}}/users/2/verify-renter
+
+### 6. Reserva (ajusta las fechas a fechas futuras)
+POST {{api}}/reservations
+Content-Type: application/json
+
+{ "vehicleId": 1, "renterId": 2, "startDate": "2026-12-01T10:00:00", "endDate": "2026-12-04T10:00:00", "riskLevel": "Medium" }
+
+### 7. Confirmar: crea el depósito dinámico
+POST {{api}}/reservations/1/confirm
+
+###
+GET {{api}}/security-deposits/by-reservation/1
+
+### 8. Registrar la retención confirmada por el proveedor de pagos
+POST {{api}}/security-deposits/1/hold
+Content-Type: application/json
+
+{ "heldAmount": 41976, "paymentProviderReference": "PSP-0001" }
+
+### 9. Inspección de entrega e inicio
+POST {{api}}/inspections
+Content-Type: application/json
+
+{ "reservationId": 1, "type": "Delivery", "mileage": 30000, "fuelLevelPercentage": 100 }
+
+###
+POST {{api}}/reservations/1/start
+
+###
+GET {{api}}/vehicles?brand=toyota&status=Active
